@@ -1,0 +1,58 @@
+## 
+## GF @ zerohat . net
+## (c) Devdeer, newCO 2017
+##
+
+The whole Container-as-a-Service is based on IBM Cloud Private Release 2.
+WHY? Because it is the best, secured, highly-flexible Private Docker setup
+you will get out there, without paying to much, like Azure Container Services
+or Docker Enterprise!
+
+Architecture:
+https://www.ibm.com/support/knowledgecenter/SSBS6K_2.1.0/getting_started/architecture.html
+
+Main Tutorials:
+https://www.ibm.com/support/knowledgecenter/SSBS6K_2.1.0/kc_welcome_containers.html
+
+Stack Overflow:
+https://stackoverflow.com/search?q=ibm-cloud-private
+
+CE versus Enterprise Lics:
+https://www.ibm.com/developerworks/community/wikis/home?lang=en#!/wiki/W1559b1be149d_43b0_881e_9783f38faaff/page/Licenses
+
+
+
+############# newCO CaaS NOTES ##########
+#########################################
+
+After initial Installation, perform following tasks:
+
+1. Add Kubernetes HELM Charts Repository
+(a) Login > System > Repositories > Add Repository
+    NAME: Kubernetes HELM
+    URL: https://kubernetes-charts.storage.googleapis.com/
+(b) Add additional Repo used to install ISTIO
+    NAME: Google Incubator
+    URL: http://storage.googleapis.com/kubernetes-charts-incubator
+    Click on "Sync Repositories"
+
+
+2. Install HELM
+(a) Configure kubectl click
+    Login > Admin User-Id > "Configure Client" and use the kubectl commands
+    on your master node to get access
+(b) master node via ssh
+    $# docker run -t --entrypoint=/bin/cp -v /usr/local/bin:/data ibmcom/helm:v2.5.0  /helm /data/
+    $# mkdir -p /var/lib/helm; export HELM_HOME=/var/lib/helm
+    $# helm init --client-only
+
+
+   NOTE: Incuabtor Repo is currently NOT working properly, therefore no ISTIO
+3. Install ISTIO (Microsorvices Management: https://istio.io/)
+(a) Login > AppCenter > Search for "istio" and click on "Deploy Application"
+    NOTE: scroll down to config end and enable "rbac.install"
+    Review & Install
+    ...will take around 5min to finish.
+
+
+# EOF

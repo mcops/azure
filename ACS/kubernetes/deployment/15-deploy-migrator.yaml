@@ -42,9 +42,9 @@ spec:
               name: mysql-pass
               key: password
         - name: SECRET_KEY_BASE
-          value: "771ed517958743b0e55deb00a4e3d067c9c54aaade7b14284cd4080a279fc7a6b41debf4531e36d881b9771bfab8b331ec60f04d3cfb5dc7c6b306d2bc45aa30"
+          value: "REMOVED"
         - name: HOST_URL
-          value: "http://dpms-migrator.westeurope.cloudapp.azure.com"
+          value: "REMOVED.westeurope.cloudapp.azure.com"
         - name: MIGRATIONS
           value: "true"
       imagePullSecrets:

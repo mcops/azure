@@ -1,0 +1,67 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dpms-mysql-pv-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 30Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dpms-mysql
+spec:
+  ports:
+  - port: 3306
+  selector:
+    app: dpms-prod-db
+    tier: backend
+ # clusterIP: None
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: dpms-mysql
+  labels:
+    app: dpms-prod-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dpms-prod-db
+      tier: backend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: dpms-prod-db
+        tier: backend
+    spec:
+      containers:
+      - image: mysql:5.6
+        name: mysql
+        args:
+          - "--ignore-db-dir"
+          - "lost+found"
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: password
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: dpms-mysql-pv-claim
+      #hostNetwork: true

@@ -1,0 +1,56 @@
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: dpms-web
+  labels:
+    app: dpms-prod-web
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: dpms-prod-web
+      tier: frontend
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+    #type: Recreate
+  template:
+    metadata:
+      labels:
+        app: dpms-prod-web
+        tier: frontend
+    spec:
+      containers:
+      - image: index.docker.io/niltonvasques/pms-webserver:v0.43.1
+        name: dpms-web
+        imagePullPolicy: Always
+        env:
+        - name: MYSQL_HOST
+          value: "dpms-mysql.default.svc.cluster.local"
+        - name: MYSQL_DATABASE
+          value: pmsrails
+        - name: PRECOMPILE
+          value: "true"
+        - name: RAILS_ENV
+          value: production
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: password
+        - name: SECRET_KEY_BASE
+          value: "771ed517958743b0e55deb00a4e3d067c9c54aaade7b14284cd4080a279fc7a6b41debf4531e36d881b9771bfab8b331ec60f04d3cfb5dc7c6b306d2bc45aa30"
+        - name: HOST_URL
+          value: "dpms-web.westeurope.cloudapp.azure.com"
+        - name: MIGRATIONS
+          value: "false"
+        ports:
+        - containerPort: 80
+          name: http
+        - containerPort: 443
+          name: https
+      imagePullSecrets:
+      - name: regsecret

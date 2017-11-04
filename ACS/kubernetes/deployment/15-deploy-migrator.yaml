@@ -1,0 +1,51 @@
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: dpms-migrator
+  labels:
+    app: dpms-prod-migrator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dpms-prod-migrator
+      tier: backend
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  minReadySeconds: 5
+    #type: Recreate
+  template:
+    metadata:
+      labels:
+        app: dpms-prod-migrator
+        tier: backend
+    spec:
+      containers:
+      - image: index.docker.io/niltonvasques/pms-webserver:v0.43.1
+        name: dpms-migrator
+        imagePullPolicy: Always
+        env:
+        - name: MYSQL_HOST
+          value: "dpms-mysql.default.svc.cluster.local"
+        - name: MYSQL_DATABASE
+          value: pmsrails
+        - name: RAILS_ENV
+          value: production
+        - name: PRECOMPILE
+          value: "true"
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: password
+        - name: SECRET_KEY_BASE
+          value: "771ed517958743b0e55deb00a4e3d067c9c54aaade7b14284cd4080a279fc7a6b41debf4531e36d881b9771bfab8b331ec60f04d3cfb5dc7c6b306d2bc45aa30"
+        - name: HOST_URL
+          value: "http://dpms-migrator.westeurope.cloudapp.azure.com"
+        - name: MIGRATIONS
+          value: "true"
+      imagePullSecrets:
+      - name: regsecret

@@ -1,0 +1,43 @@
+{
+  "apiVersion": "vlabs",
+  "properties": {
+    "orchestratorProfile": {
+      "orchestratorType": "Kubernetes",
+      "orchestratorRelease": "1.8"
+    },
+    "masterProfile": {
+      "count": 1,
+      "dnsPrefix": "dpms-prod",
+      "vmSize": "Standard_D2_v2",
+      "vnetSubnetId": "/subscriptions/4dc5302a-2d3a-4a4d-9fed-b0a0bd5e8551/resourceGroups/RG-KAE-CIT-EU/providers/Microsoft.Network/virtualNetworks/VNET-KAE-CIT-EU/subnets/SUBNET-KAE-CIT-EU-DPMS-ACS",
+      "firstConsecutiveStaticIP": "10.100.9.100"
+    },
+    "agentPoolProfiles": [
+      {
+        "name": "agentpool01",
+        "count": 3,
+        "vmSize": "Standard_D2_v2",
+        "vnetSubnetId": "/subscriptions/4dc5302a-2d3a-4a4d-9fed-b0a0bd5e8551/resourceGroups/RG-KAE-CIT-EU/providers/Microsoft.Network/virtualNetworks/VNET-KAE-CIT-EU/subnets/SUBNET-KAE-CIT-EU-DPMS-ACS",
+        "availabilityProfile": "AvailabilitySet",
+        "customNodeLabels": {
+          "project": "dpms",
+          "location": "europe"
+        }
+      }
+    ],
+    "linuxProfile": {
+      "adminUsername": "opsadmin",
+      "ssh": {
+        "publicKeys": [
+          {
+            "keyData": "ssh-rsa xxxxxxxxxxx"
+          }
+        ]
+      }
+    },
+    "servicePrincipalProfile": {
+      "clientId": "XXXXXX",
+      "secret": "XXXXX"
+    }
+  }
+}

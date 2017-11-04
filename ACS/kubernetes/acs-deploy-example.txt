@@ -1,1 +1,3 @@
-
+acs-engine deploy --subscription-id {Sub-ID} \
+--dns-prefix dpms-prod --resource-group {MY-RG} \
+--location westeurope --auto-suffix --api-model {MY-JSON}.json
